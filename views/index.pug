@@ -2,4 +2,53 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+
+  if user
+    h2 Welcome #{user.first_name}
+    div
+      ul
+        li
+          a(href='/join') Join the Club
+        li
+          a(href='/send') Send New Message
+        li
+          a(href='/log-out') Log Out
+
+    div
+      if messages
+        h2 Messages
+        for msg in messages
+          div
+            if (user.member_status === 'normal')
+              h4 Anonymous User
+            if (user.member_status === 'vip')
+              h4 #{msg.sender.first_name} #{msg.sender.last_name}
+            h5= msg.title
+            p= msg.text
+            p= msg.timestamp
+          hr
+
+  else
+    h2 Please Log In or Sign Up
+    form(action="/log-in" method="POST")
+      label(for="username") Username:
+      input(type="text" name="username" placeholder="username")
+      label(for="password") Password:
+      input(type='password' name='password')
+      button(type='submit') Log In
+
+    a(href="/sign-up") Sign Up
+
+    div
+      if messages
+        h2 Messages
+        for msg in messages
+          div
+            h4 Anonymous User
+            h5= msg.title
+            p= msg.text
+            p= msg.timestamp
+          hr
+
+
+

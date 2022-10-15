@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  div
+    if user
+      h1 Hello #{user.first_name}
+      h2 Join the Club by entering the secret password!
+
+      form(action='' method='POST')
+        label(for="secret") Secret Password:
+        input(type='text' name='secret')
+        button(type='submit') Submit
+
+      if errors
+        ul
+          for error in errors
+            li!= error.msg
+
+    else
+      a(href='/') Please Log In
