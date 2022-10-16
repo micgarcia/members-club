@@ -26,6 +26,11 @@ block content
             h5= msg.title
             p= msg.text
             p= msg.timestamp
+
+            if(user.admin)
+              form(action='/delete' method="POST")
+                input(type='hidden' name='delete' value=msg.id)
+                button(type='submit') Delete Message
           hr
 
   else

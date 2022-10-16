@@ -62,7 +62,8 @@ router.post('/sign-up',
       last_name: req.body.last_name,
       username: req.body.email,
       password: req.body.password,
-      confirmPassword: req.body.confirmPassword
+      confirmPassword: req.body.confirmPassword,
+      adminCheck: req.body.adminCheck
     }
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -72,6 +73,13 @@ router.post('/sign-up',
       });
       return;
     }
+
+    if(req.body.adminCheck === 'on') {
+      req.body.adminCheck = true;
+    } else if (req.body.adminCheck === 'off') {
+      req.body.adminCheck = false;
+    };
+
     bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
       if (err) {
         return next(err);
@@ -82,7 +90,9 @@ router.post('/sign-up',
         last_name: req.body.last_name,
         username: req.body.email,
         password: hashedPassword,
-        member_status: 'normal'
+        member_status: 'normal',
+        admin: req.body.adminCheck
+
       }).save(err => {
         if (err) {
           return next(err);
@@ -187,6 +197,19 @@ router.post('/send',
         return next(err)
       }
       res.redirect('/');
+    })
+  }
+)
+
+
+// POST delete message
+router.post('/delete',
+  (req, res, next) => {
+    Messages.findByIdAndRemove(req.body.delete, (err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/')
     })
   }
 )
